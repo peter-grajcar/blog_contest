@@ -31,7 +31,7 @@ int main()
     char mem1[64] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 'M', 'i', 'l', 'a', 'n', '\0', 'H', 'e', 'l', 'l', 'o', ' ', ',', ' ', '?', '?', '?', '?', '?', '!', '\0', 0 };
     char mem2[64] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 'M', 'i', 'l', 'a', 'n', '\0', 'H', 'e', 'l', 'l', 'o', ' ', ',', ' ', '?', '?', '?', '?', '?', '!', '\0', 0 };
 
-    size_t str_offset[] = { 15, 21, 40, 50 };
+    size_t str_offset[] = { 15, 21, 40, 50, 62 };
 
     std::cout << "Original" << std::endl;
     for(auto c : mem1)
@@ -43,18 +43,22 @@ int main()
 
 
     contest::memcpy(mem1, mem1 + 5, 5);
-    contest::memset(mem1 + 10, 1, 5);
+    contest::memset(mem1 + 10, 6, 5);
     contest::strncpy(mem1 + str_offset[1] + 8, mem1 + str_offset[0], 5);
     contest::memset(mem1 + str_offset[2], 42, 20);
     contest::strncpy(mem1 + str_offset[2], mem1 + str_offset[0], 15);
     contest::strcpy(mem1 + str_offset[3], mem1 + str_offset[0]);
+    contest::strcpy(mem1 + str_offset[0] + 4, mem1 + str_offset[4]);
+    contest::memmove(mem1, mem1 + 2, 3);
 
     memcpy(mem2, mem2 + 5, 5);
-    memset(mem2 + 10, 1, 5);
+    memset(mem2 + 10, 6, 5);
     strncpy(mem2 + str_offset[1] + 8, mem2 + str_offset[0], 5);
     memset(mem2 + str_offset[2], 42, 20);
     strncpy(mem2 + str_offset[2], mem2 + str_offset[0], 15);
     strcpy(mem2 + str_offset[3], mem2 + str_offset[0]);
+    strcpy(mem2 + str_offset[0] + 4, mem2 + str_offset[4]);
+    memmove(mem2, mem2 + 2, 3);
 
 
     std::cout << std::endl << "contest_string" << std::endl;
@@ -84,7 +88,7 @@ int main()
     }
     if(pass) std::cout << "memory test PASSED" << std::endl;
 
-    for(size_t i = 0; i < 4; ++i) {
+    for(size_t i = 0; i < 5; ++i) {
         size_t len1 = contest::strlen(mem1 + str_offset[i]);
         size_t len2 = strlen(mem2 + str_offset[i]);
         if (len1 != len2)
@@ -92,4 +96,12 @@ int main()
         else
             std::cout << "string test " << i + 1 << " PASSED" << std::endl;
     }
+
+    int cmp1 = memcmp(mem2 + 5, mem2 + 10, 5);
+    int cmp2 = contest::memcmp(mem1 + 5, mem1 + 10, 5);
+    if((cmp1 >= 0) ^ (cmp2 < 0))
+        std::cout << "comparison test PASSED" << std::endl;
+    else
+        std::cout << "comparison test FAILED expected sign " << cmp1 << " got " << cmp2 << std::endl;
+
 }

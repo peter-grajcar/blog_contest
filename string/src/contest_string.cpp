@@ -7,7 +7,7 @@ namespace contest
     {
         auto *l = (unsigned char *) left;
         auto *r = (unsigned char *) right;
-        int cmp = 0;
+        int cmp;
 
         while (cmp = *l - *r, l++, r++, byteLength--)
             if (cmp) return cmp;
