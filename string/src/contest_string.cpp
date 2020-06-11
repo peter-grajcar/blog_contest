@@ -32,7 +32,7 @@ namespace contest
 
         if (dest < src) {
             auto * d = (unsigned char *) dest;
-            auto * s = (unsigned char *) src + byteLength;
+            auto * s = (unsigned char *) src;
 
             do
                 *d = *s;
