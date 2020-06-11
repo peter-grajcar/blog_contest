@@ -50,6 +50,8 @@ int main()
     contest::strcpy(mem1 + str_offset[3], mem1 + str_offset[0]);
     contest::strcpy(mem1 + str_offset[0] + 4, mem1 + str_offset[4]);
     contest::memmove(mem1, mem1 + 2, 3);
+    contest::memmove(mem1 + 30, mem1 + 30, 30);
+    contest::memset(mem1 + 60, 42, 0);
 
     memcpy(mem2, mem2 + 5, 5);
     memset(mem2 + 10, 6, 5);
@@ -59,9 +61,11 @@ int main()
     strcpy(mem2 + str_offset[3], mem2 + str_offset[0]);
     strcpy(mem2 + str_offset[0] + 4, mem2 + str_offset[4]);
     memmove(mem2, mem2 + 2, 3);
+    memmove(mem2 + 30, mem2 + 30, 30);
+    memset(mem2 + 60, 42, 0);
 
 
-    std::cout << std::endl << "contest_string" << std::endl;
+    std::cout << "contest_string" << std::endl;
     for(auto c : mem1)
         std::cout << std::setw(3) << (int) c << '|';
     std::cout << std::endl;
@@ -69,7 +73,7 @@ int main()
         std::cout << std::setw(3) << (c < 16 ? ' ' : c) << '|';
     std::cout << std::endl;
 
-    std::cout << std::endl << "string" << std::endl;
+    std::cout << "string" << std::endl;
     for(auto c : mem2)
         std::cout << std::setw(3) << (int) c << '|';
     std::cout << std::endl;
@@ -100,8 +104,15 @@ int main()
     int cmp1 = memcmp(mem2 + 5, mem2 + 10, 5);
     int cmp2 = contest::memcmp(mem1 + 5, mem1 + 10, 5);
     if((cmp1 >= 0) ^ (cmp2 < 0))
-        std::cout << "comparison test PASSED" << std::endl;
+        std::cout << "comparison test 1 PASSED" << std::endl;
     else
-        std::cout << "comparison test FAILED expected sign " << cmp1 << " got " << cmp2 << std::endl;
+        std::cout << "comparison test 1 FAILED expected sign " << cmp1 << " got " << cmp2 << std::endl;
+
+    cmp1 = memcmp(mem1, mem2, 64);
+    cmp2 = contest::memcmp(mem1, mem2, 64);
+    if(cmp1 == 0 && cmp2 == 0)
+        std::cout << "comparison test 2 PASSED" << std::endl;
+    else
+        std::cout << "comparison test 2 FAILED expected sign " << cmp1 << " got " << cmp2 << std::endl;
 
 }

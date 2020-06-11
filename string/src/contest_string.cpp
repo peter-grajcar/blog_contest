@@ -9,10 +9,10 @@ namespace contest
         auto *r = (unsigned char *) right;
         int cmp;
 
-        while (cmp = *l - *r, l++, r++, byteLength--)
+        while (cmp = *l - *r, l++, r++, --byteLength)
             if (cmp) return cmp;
 
-        return 0;
+        return cmp;
     }
 
     void *memcpy(void* _Rstr dest, const void* _Rstr src, size_t byteLength)
