@@ -1,5 +1,6 @@
 #include <contest_string.h>
 #include <iostream>
+#include <iomanip>
 
 int main()
 {
@@ -25,68 +26,70 @@ int main()
 			<< "And good luck, with lots of love <3\n"
 			<< "Signed-off-by: Milan Gallo <gallo.milan.jr@gmail.com>\n";
 
-	int mem1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	int mem2[5];
-    int mem3[] = {1, 2, 3, 4, 5, 8, 9, 10, 11, 12};
-    int mem4[20];
-    char str1[] = "Milan";
-    char str2[] = "Hello, _____!";
-    char str3[6] = "";
-    char str4[21] = "____________________";
-    char str5[] = "";
 
-    /*
-	contest::memcmp(nullptr, nullptr, 0);
-	contest::memcpy(nullptr, nullptr, 0);
-	contest::memmove(nullptr, nullptr, 0);
-	contest::memset(nullptr, 0, 0);
-	contest::strcpy(nullptr, nullptr);
-	contest::strncpy(nullptr, nullptr, 0);
-	contest::strlen(nullptr);
-     */
 
-    memcpy(mem2, mem1, 5*sizeof(int));
-    memmove(mem1 + 5, mem1, 5*sizeof(int));
-    memmove(mem3, mem3 + 5, 5*sizeof(int));
-    memset(mem4, 0, 20 * sizeof(int));
-    strcpy(str3, str1);
-    strncpy(str2 + 7, str1, 5);
-    strncpy(str4, str1, 20);
+    char mem1[64] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 'M', 'i', 'l', 'a', 'n', '\0', 'H', 'e', 'l', 'l', 'o', ' ', ',', ' ', '?', '?', '?', '?', '?', '!', '\0', 0 };
+    char mem2[64] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 'M', 'i', 'l', 'a', 'n', '\0', 'H', 'e', 'l', 'l', 'o', ' ', ',', ' ', '?', '?', '?', '?', '?', '!', '\0', 0 };
 
-	std::cout << "mem1: ";
-	for(int i : mem1)
-	    std::cout << i << ' ';
-	std::cout << std::endl;
+    size_t str_offset[] = { 15, 21, 40, 50 };
 
-    std::cout << "mem2: ";
-    for(int i : mem2)
-        std::cout << i << ' ';
+    std::cout << "Original" << std::endl;
+    for(auto c : mem1)
+        std::cout << std::setw(3) << (int) c << '|';
+    std::cout << std::endl;
+    for(auto c : mem1)
+        std::cout << std::setw(3) << (c < 16 ? ' ' : c) << '|';
     std::cout << std::endl;
 
-    std::cout << "mem3: ";
-    for(int i : mem3)
-        std::cout << i << ' ';
+
+    contest::memcpy(mem1, mem1 + 5, 5);
+    contest::memset(mem1 + 10, 1, 5);
+    contest::strncpy(mem1 + str_offset[1] + 8, mem1 + str_offset[0], 5);
+    contest::memset(mem1 + str_offset[2], 42, 20);
+    contest::strncpy(mem1 + str_offset[2], mem1 + str_offset[0], 15);
+    contest::strcpy(mem1 + str_offset[3], mem1 + str_offset[0]);
+
+    memcpy(mem2, mem2 + 5, 5);
+    memset(mem2 + 10, 1, 5);
+    strncpy(mem2 + str_offset[1] + 8, mem2 + str_offset[0], 5);
+    memset(mem2 + str_offset[2], 42, 20);
+    strncpy(mem2 + str_offset[2], mem2 + str_offset[0], 15);
+    strcpy(mem2 + str_offset[3], mem2 + str_offset[0]);
+
+
+    std::cout << std::endl << "contest_string" << std::endl;
+    for(auto c : mem1)
+        std::cout << std::setw(3) << (int) c << '|';
+    std::cout << std::endl;
+    for(auto c : mem1)
+        std::cout << std::setw(3) << (c < 16 ? ' ' : c) << '|';
     std::cout << std::endl;
 
-    std::cout << "mem4: ";
-    for(int i : mem4)
-        std::cout << i << ' ';
+    std::cout << std::endl << "string" << std::endl;
+    for(auto c : mem2)
+        std::cout << std::setw(3) << (int) c << '|';
+    std::cout << std::endl;
+    for(auto c : mem2)
+        std::cout << std::setw(3) << (c < 16 ? ' ' : c) << '|';
     std::cout << std::endl;
 
-    std::cout << "str1: " << str1 << std::endl
-              << "\tlength: " << strlen(str1) << std::endl
-              << "str2: " << str2 << std::endl
-              << "\tlength: " << strlen(str2) << std::endl
-              << "str3: " << str3 << std::endl
-              << "\tlength: " << strlen(str3) << std::endl
-              << "str4: ";
 
-    for(char c : str4)
-        std::cout << c;
-    std::cout << std::endl;
-    std::cout << "\tlength: " << strlen(str4) << std::endl;
+    bool pass = true;
+    for(size_t i = 0; i < 64; ++i) {
+        if(mem1[i] != mem2[i]) {
+            std::cerr << "memory test FAILED at [" << i << "] expected " << (int) mem2[i] << " got " << (int) mem1[i]
+                      << std::endl;
+            pass = false;
+        }
+    }
+    if(pass) std::cout << "memory test PASSED" << std::endl;
 
-    std::cout << "str5 length: " << strlen(str5) << std::endl;
-
-	return 0;
+    for(size_t i = 0; i < 4; ++i) {
+        size_t len1 = contest::strlen(mem1 + str_offset[i]);
+        size_t len2 = strlen(mem2 + str_offset[i]);
+        if (len1 != len2)
+            std::cerr << "string test " << i + 1 << " FAILED expected length " << len2 << " got " << len1 << std::endl;
+        else
+            std::cout << "string test " << i + 1 << " PASSED" << std::endl;
+    }
 }

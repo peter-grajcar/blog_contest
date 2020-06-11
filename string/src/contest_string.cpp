@@ -34,12 +34,11 @@ namespace contest
             auto * d = (unsigned char *) dest;
             auto * s = (unsigned char *) src;
 
-            do
-                *d = *s;
-            while (d++, s++, byteLength--);
+            while (byteLength--)
+                *d++ = *s++;
         } else if (dest > src) {
-            auto * d = (unsigned char *) dest + byteLength;
-            auto * s = (unsigned char *) src + byteLength;
+            auto *d = (unsigned char *) dest + byteLength;
+            auto *s = (unsigned char *) src + byteLength;
 
             while (s--, d--, byteLength--)
                 *d = *s;
@@ -50,21 +49,21 @@ namespace contest
 
     void *memset(void *dest, int value, size_t byteLength)
     {
-        char *d = (char *) dest;
+        auto *d = (unsigned char *) dest;
 
         while (byteLength--)
-            *d-- = value;
+            *d++ = value;
 
         return dest;
     }
 
     char *strcpy(char *_Rstr dest, const char *_Rstr src)
     {
-        char *d = (char *) dest;
+        char *d = dest;
 
         do
-            *d++ = *src++;
-        while (!*src);
+            *d = *src;
+        while (d++, *src++);
 
         return dest;
     }
@@ -73,8 +72,10 @@ namespace contest
     {
         char * d = (char *) dest;
 
-        while (!*src && length--)
+        while (length--) {
             *d++ = *src++;
+            if(!*src) break;
+        }
         while (length--)
             *d++ = '\0';
 
@@ -85,7 +86,7 @@ namespace contest
     {
         size_t len = 0;
 
-        while (!*str++)
+        while (*str++)
             len++;
 
         return len;
