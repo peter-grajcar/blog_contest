@@ -5,8 +5,8 @@ namespace contest
 
     int memcmp(const void *left, const void *right, size_t byteLength)
     {
-        auto *l = (unsigned char *) left;
-        auto *r = (unsigned char *) right;
+        auto *l = static_cast<const unsigned char *>(left);
+        auto *r = static_cast<const unsigned char *>(right);
         int cmp;
 
         while (cmp = *l - *r, l++, r++, --byteLength)
@@ -17,8 +17,8 @@ namespace contest
 
     void *memcpy(void* _Rstr dest, const void* _Rstr src, size_t byteLength)
     {
-        auto *d = (unsigned char *) dest;
-        auto *s = (unsigned char *) src;
+        auto *d = static_cast<unsigned char *>(dest);
+        auto *s = static_cast<const unsigned char *>(src);
 
         while (byteLength--)
             *d++ = *s++;
@@ -31,8 +31,8 @@ namespace contest
         if (!byteLength) return dest;
 
         if (dest < src) {
-            auto * d = (unsigned char *) dest;
-            auto * s = (unsigned char *) src;
+            auto * d = static_cast<unsigned char *>(dest);
+            auto * s = static_cast<const unsigned char *>(src);
 
             while (byteLength--)
                 *d++ = *s++;
@@ -49,7 +49,7 @@ namespace contest
 
     void *memset(void *dest, int value, size_t byteLength)
     {
-        auto *d = (unsigned char *) dest;
+        auto *d = static_cast<unsigned char *>(dest);
 
         while (byteLength--)
             *d++ = value;
@@ -70,7 +70,7 @@ namespace contest
 
     char *strncpy(char *_Rstr dest, const char *_Rstr src, size_t length)
     {
-        char * d = (char *) dest;
+        char *d = dest;
 
         while (length--) {
             *d++ = *src++;
