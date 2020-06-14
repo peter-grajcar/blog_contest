@@ -37,8 +37,8 @@ namespace contest
             while (byteLength--)
                 *d++ = *s++;
         } else if (dest > src) {
-            auto *d = (unsigned char *) dest + byteLength;
-            auto *s = (unsigned char *) src + byteLength;
+            auto *d = static_cast<unsigned char *>(dest) + byteLength;
+            auto *s = static_cast<const unsigned char *>(src) + byteLength;
 
             while (s--, d--, byteLength--)
                 *d = *s;
