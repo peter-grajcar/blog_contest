@@ -7,8 +7,9 @@ namespace contest
     {
         auto *l = static_cast<const unsigned char *>(left);
         auto *r = static_cast<const unsigned char *>(right);
-        int cmp;
+        int cmp = 0;
 
+        if(!byteLength) return cmp;
         while (cmp = *l - *r, l++, r++, --byteLength)
             if (cmp) return cmp;
 
